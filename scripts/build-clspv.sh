@@ -15,4 +15,6 @@ cmake -DCMAKE_BUILD_TYPE=MinSizeRel \
   -DCMAKE_INSTALL_PREFIX=${DESTDIR} \
   ../third_party/clspv
   
+ninja && ninja install
 
+cd ${curdir}

@@ -43,10 +43,17 @@ MLSpv Use existing eco-system as much as possible.
 
 ## Requirements
 
-* C++11 compiler
+* C++14 compiler
+  * SwiftShader requires C++14
 * CMake
 * Ninja(Linux and macOS)
 * Python3(to build some submodules)
+
+## Setup
+
+```
+$ git submodule update --init --recursive
+```
 
 ## Build
 
@@ -70,11 +77,38 @@ $ ./scripts/build-clspv.sh
 $ ./scripts/build-validation-layers.sh
 ```
 
-### Setup on Windows
+#### Build swiftshader(optional)
+
+```
+$ ./scripts/build-swiftshader-linux.sh
+```
+
+### Build MLSpv
+
+```
+$ ./scripts/bootstrap-linux.sh
+$ cd build
+$ ninja
+```
+
+## Build on Windows
 
 Visual Studio 2017 or later is required to build MLSpv and submodules.
 
 T.B.W.
+
+## Run
+
+### Run with SwiftShader
+
+Specify ICD setting json file through `VK_ICD_FILENAMES` envrionment.
+
+```
+VK_ICD_FILENAMES=vk_swiftshader_icd.json ./mlspv
+```
+
+If you failed to load `.so`, add path to `libvk_swiftshader.so` into `LD_LIBRRAY_PATH` variable.
+(On some securiuty-enhanced Unixish system, you'll need to add current directory(`.`) to its search path if you want to load `.so` from a current directory)
 
 ## TODO
 
@@ -86,6 +120,7 @@ MIT license
 
 ### Thrid paty licenses
 
+* vulkan_minimal_compute: MIT license. https://github.com/Erkaman/vulkan_minimal_compute
 * clspv : Apache 2.0 license. https://github.com/google/clspv
 * glslang : See glslang repo for details. https://github.com/KhronosGroup/glslang
   * Required to build ValidationLayers

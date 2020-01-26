@@ -19,3 +19,6 @@
 [submodule "third_party/rttr"]
 	path = third_party/rttr
 	url = https://github.com/rttrorg/rttr
+[submodule "third_party/Vulkan-Loader"]
+	path = third_party/Vulkan-Loader
+	url = https://github.com/KhronosGroup/Vulkan-Loader
