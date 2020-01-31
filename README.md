@@ -2,7 +2,7 @@
 
 ## Status
 
-Experimental.
+Just beggining. Nothing yet here.
 Inference only at the moment. 
 
 ## Design direction
@@ -18,7 +18,7 @@ MLSpv is designed to have capability to run following tasks
 
 MLSpv Use existing eco-system as much as possible.
 
-* Use clspv(OpenCL to SPIR-V) as a HIR(higher level language).
+* Use HLSL(available from Vulkan 1.2+) or clspv(OpenCL to SPIR-V) as a HIR(higher level language).
 * Use SPIR-V as an IR(intermediate language).
 * Use Vulkan as a runtime
   * Use SwiftShader as a CPU fallback
@@ -43,8 +43,8 @@ MLSpv Use existing eco-system as much as possible.
 
 ## Requirements
 
-* C++14 compiler
-  * SwiftShader requires C++14
+* C++11 compiler
+  * C++14 when you want to build SwiftShader
 * CMake
 * Ninja(Linux and macOS)
 * Python3(to build some submodules)
@@ -131,4 +131,5 @@ MIT license
 * SPIRV-Cross : Apache 2.0 license. https://github.com/KhronosGroup/SPIRV-Cross/
   * SPIRV-Cross-ISPC: Apache 2.0 license. https://github.com/GameTechDev/SPIRV-Cross
 * rttr(C++ reflection library) : MIT license. https://github.com/rttrorg/rttr
+* amber : Apache 2.0 license. https://github.com/google/amber
 
