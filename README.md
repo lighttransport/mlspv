@@ -129,5 +129,6 @@ MIT license
 * Vulkan-Loader : Apache 2.0 license. https://github.com/KhronosGroup/Vulkan-Loader
 * Vulkan-ValidationLayers : Apache 2.0 license. https://github.com/KhronosGroup/Vulkan-ValidationLayers
 * SPIRV-Cross : Apache 2.0 license. https://github.com/KhronosGroup/SPIRV-Cross/
+  * SPIRV-Cross-ISPC: Apache 2.0 license. https://github.com/GameTechDev/SPIRV-Cross
 * rttr(C++ reflection library) : MIT license. https://github.com/rttrorg/rttr
 

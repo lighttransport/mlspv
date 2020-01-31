@@ -22,3 +22,6 @@
 [submodule "third_party/Vulkan-Loader"]
 	path = third_party/Vulkan-Loader
 	url = https://github.com/KhronosGroup/Vulkan-Loader
+[submodule "third_party/SPIRV-Cross-ISPC"]
+	path = third_party/SPIRV-Cross-ISPC
+	url = https://github.com/GameTechDev/SPIRV-Cross
