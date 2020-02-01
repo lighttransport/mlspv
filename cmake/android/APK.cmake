@@ -34,8 +34,8 @@ set(ANDROID_APK_CREATE				On							CACHE BOOL		"Create apk file?")
 set(ANDROID_APK_INSTALL				Off							CACHE BOOL		"Install created apk file on the device automatically?")
 set(ANDROID_APK_RUN					Off							CACHE BOOL		"Run created apk file on the device automatically? (installs it automatically as well, \"ANDROID_APK_INSTALL\"-option is ignored)")
 set(ANDROID_APK_TOP_LEVEL_DOMAIN	"com"						CACHE STRING	"Top level domain name of the organization (follow the package naming conventions (http://en.wikipedia.org/wiki/Java_package#Package_naming_conventions))")
-set(ANDROID_APK_DOMAIN				"orbitengine"				CACHE STRING	"Organization's domain (follow the package naming conventions (http://en.wikipedia.org/wiki/Java_package#Package_naming_conventions))")
-set(ANDROID_APK_SUBDOMAIN			"test"						CACHE STRING	"Any subdomains (follow the package naming conventions (http://en.wikipedia.org/wiki/Java_package#Package_naming_conventions))")
+set(ANDROID_APK_DOMAIN				"lighttransport"				CACHE STRING	"Organization's domain (follow the package naming conventions (http://en.wikipedia.org/wiki/Java_package#Package_naming_conventions))")
+set(ANDROID_APK_SUBDOMAIN			"mlspv"						CACHE STRING	"Any subdomains (follow the package naming conventions (http://en.wikipedia.org/wiki/Java_package#Package_naming_conventions))")
 set(ANDROID_APK_FULLSCREEN			"1"							CACHE BOOL		"Run the application in fullscreen? (no status/title bar)")
 set(ANDROID_APK_RELEASE				Off							CACHE BOOL		"Create apk file ready for release? (signed, you have to enter a password during build, do also setup \"ANDROID_APK_SIGNER_KEYSTORE\" and \"ANDROID_APK_SIGNER_ALIAS\")")
 set(ANDROID_APK_SIGNER_KEYSTORE		"~/my-release-key.keystore"	CACHE STRING	"Keystore for signing the apk file (only required for release apk)")
@@ -43,6 +43,7 @@ set(ANDROID_APK_SIGNER_ALIAS		"myalias"					CACHE STRING	"Alias for signing the 
 set(ANDROID_APK_SIGNER_DEBUG_KEYSTORE	"~/.android/debug.keystore"	CACHE STRING	"Keystore for signing the apk file (for debug apk)")
 set(ANDROID_APK_SIGNER_DEBUG_ALIAS		"androiddebugkey"					CACHE STRING	"Alias for signing the apk file (for debug apk)")
 set(ANDROID_SDK_HOME		"~/Android/Sdk"					CACHE STRING	"Android SDK home)")
+set(ANDROID_NDK_HOME		"~/Android/Sdk/ndk-bundle"				CACHE STRING	"Android NDK home)")
 
 set(ARM_TARGET ${ANDROID_ABI})
 ##################################################
@@ -135,6 +136,16 @@ macro(android_create_apk name apk_directory shared_libraries)
 			)
 		endforeach()
 
+		message(STATUS "ANDROID_STL: " ${ANDROID_STL})
+		if (ANDROID_STL STREQUAL "c++_shared")
+			# copy libc++_shared.so
+			add_custom_command(TARGET ${ANDROID_NAME}
+				POST_BUILD
+				COMMAND ${CMAKE_COMMAND} -E copy ${ANDROID_NDK_HOME}/sources/cxx-stl/llvm-libc++/libs/${ARM_TARGET}/libc++_shared.so "${apk_directory}/libs/lib/${ARM_TARGET}"
+			)
+		endif ()
+
+
 		# Create the directory for apk
 		add_custom_command(TARGET ${ANDROID_NAME}
 			PRE_BUILD
@@ -201,11 +212,11 @@ macro(android_create_apk name apk_directory shared_libraries)
 				WORKING_DIRECTORY "${apk_directory}"
 			)
 
-			# Sign the apk file with debug keystore
-			add_custom_command(TARGET ${ANDROID_NAME}
-				COMMAND jarsigner -verbose -keystore ${ANDROID_APK_SIGNER_DEBUG_KEYSTORE} -storepass android -keypass android build/${ANDROID_NAME}-unsigned-debug.apk ${ANDROID_APK_SIGNER_DEBUG_ALIAS}
-				WORKING_DIRECTORY "${apk_directory}"
-			)
+			## Sign the apk file with debug keystore
+			#add_custom_command(TARGET ${ANDROID_NAME}
+			#	COMMAND jarsigner -verbose -keystore ${ANDROID_APK_SIGNER_DEBUG_KEYSTORE} -storepass android -keypass android build/${ANDROID_NAME}-unsigned-debug.apk ${ANDROID_APK_SIGNER_DEBUG_ALIAS}
+			#	WORKING_DIRECTORY "${apk_directory}"
+			#)
 
 			# Align the apk file
 			# (must be called before apksigner. must be called after jarsigner)
@@ -214,6 +225,11 @@ macro(android_create_apk name apk_directory shared_libraries)
 				WORKING_DIRECTORY "${apk_directory}"
 			)
 
+			# Sign the apk file with debug keystore
+			add_custom_command(TARGET ${ANDROID_NAME}
+				COMMAND apksigner sign -v --min-sdk-version ${ANDROID_NATIVE_API_LEVEL} --ks ${ANDROID_APK_SIGNER_DEBUG_KEYSTORE} --ks-pass pass:android build/${ANDROID_NAME}-debug.apk
+				WORKING_DIRECTORY "${apk_directory}"
+			)
 
 
 

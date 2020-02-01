@@ -91,7 +91,7 @@ if (ANDROID)
   target_include_directories(${BUILD_LIBNAME} PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue)
   target_link_libraries(${BUILD_LIBNAME} PRIVATE log android)
  
-  android_create_apk(${BUILD_LIBNAME} "${CMAKE_BINARY_DIR}/APK" "${APP_SHARED_LIBRARIES}" "")
+  android_create_apk(${BUILD_LIBNAME} "${CMAKE_BINARY_DIR}/apk" "${APP_SHARED_LIBRARIES}" "")
 
 else (ANDROID)
   add_executable(${TARGET_NAME} src/main.cc)
