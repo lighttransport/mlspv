@@ -40,12 +40,20 @@ set(ANDROID_APK_FULLSCREEN			"1"							CACHE BOOL		"Run the application in fulls
 set(ANDROID_APK_RELEASE				Off							CACHE BOOL		"Create apk file ready for release? (signed, you have to enter a password during build, do also setup \"ANDROID_APK_SIGNER_KEYSTORE\" and \"ANDROID_APK_SIGNER_ALIAS\")")
 set(ANDROID_APK_SIGNER_KEYSTORE		"~/my-release-key.keystore"	CACHE STRING	"Keystore for signing the apk file (only required for release apk)")
 set(ANDROID_APK_SIGNER_ALIAS		"myalias"					CACHE STRING	"Alias for signing the apk file (only required for release apk)")
+set(ANDROID_APK_SIGNER_DEBUG_KEYSTORE	"~/.android/debug.keystore"	CACHE STRING	"Keystore for signing the apk file (for debug apk)")
+set(ANDROID_APK_SIGNER_DEBUG_ALIAS		"androiddebugkey"					CACHE STRING	"Alias for signing the apk file (for debug apk)")
+set(ANDROID_SDK_HOME		"~/Android/Sdk"					CACHE STRING	"Android SDK home)")
 
 set(ARM_TARGET ${ANDROID_ABI})
 ##################################################
 ## Variables
 ##################################################
 set(ANDROID_THIS_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})	# Directory this CMake file is in
+
+if (NOT ANDROID_NATIVE_API_LEVEL)
+  message(WARNING "ANDROID_NATIVE_API_LEVEL not set. Use 28")
+  set(ANDROID_NATIVE_API_LEVEL 28)
+endif (NOT ANDROID_NATIVE_API_LEVEL)
 
 
 ##################################################
@@ -189,9 +197,24 @@ macro(android_create_apk name apk_directory shared_libraries)
 			#)
 
 			add_custom_command(TARGET ${ANDROID_NAME}
-				COMMAND aapt package -f -M AndroidManifest.xml -I "$ENV{ANDROID_SDK_HOME}/platforms/android-28/android.jar" -S res -F build/${ANDROID_NAME}-debug.apk libs
+				COMMAND aapt package -f -M AndroidManifest.xml -I "${ANDROID_SDK_HOME}/platforms/android-28/android.jar" -S res -F build/${ANDROID_NAME}-unsigned-debug.apk libs
 				WORKING_DIRECTORY "${apk_directory}"
 			)
+
+			# Sign the apk file with debug keystore
+			add_custom_command(TARGET ${ANDROID_NAME}
+				COMMAND jarsigner -verbose -keystore ${ANDROID_APK_SIGNER_DEBUG_KEYSTORE} -storepass android -keypass android build/${ANDROID_NAME}-unsigned-debug.apk ${ANDROID_APK_SIGNER_DEBUG_ALIAS}
+				WORKING_DIRECTORY "${apk_directory}"
+			)
+
+			# Align the apk file
+			# (must be called before apksigner. must be called after jarsigner)
+			add_custom_command(TARGET ${ANDROID_NAME}
+				COMMAND zipalign -v -f 4 build/${ANDROID_NAME}-unsigned-debug.apk build/${ANDROID_NAME}-debug.apk
+				WORKING_DIRECTORY "${apk_directory}"
+			)
+
+
 
 
 			# Install current version on the device/emulator
