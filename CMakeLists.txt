@@ -78,6 +78,7 @@ if (ANDROID)
   set(TEST_SRC
     ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c
     ${PROJECT_SOURCE_DIR}/android/app/src/main/cpp/main.cc
+    ${PROJECT_SOURCE_DIR}/src/vulkan/android/vulkan_wrapper.cc
     )
 
   # Make sure that the Android entry point isnt getting stripped, find a better solution

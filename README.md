@@ -132,4 +132,4 @@ MIT license
   * SPIRV-Cross-ISPC: Apache 2.0 license. https://github.com/GameTechDev/SPIRV-Cross
 * rttr(C++ reflection library) : MIT license. https://github.com/rttrorg/rttr
 * amber : Apache 2.0 license. https://github.com/google/amber
-
+* vulkan-basic-samples : Apache 2.0 license. https://github.com/googlesamples/vulkan-basic-samples
