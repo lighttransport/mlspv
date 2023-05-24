@@ -3,7 +3,7 @@
 ## Status
 
 Just beggining. Nothing yet here.
-Inference only at the moment. 
+Inference only at the moment. LoRA finetuning next.
 
 ## Design direction
 
