@@ -45,28 +45,43 @@ int main(int argc, char **argv) {
     vkEnumerateInstanceLayerProperties(&layerCount, layerProperties.data());
 
     /*
-    And then we simply check if VK_LAYER_LUNARG_standard_validation is among the
+    And then we simply check if VK_LAYER_KHRONOS_validation or VK_LAYER_LUNARG_standard_validation is among the
     supported layers.
     */
-    bool foundLayer = false;
+    bool foundKhronosValidationLayer = false;
+    bool foundLunarGValidationLayer = false;
     for (VkLayerProperties prop : layerProperties) {
       std::cout << "layer: " << prop.layerName << "\n";
     }
 
     for (VkLayerProperties prop : layerProperties) {
-      if (strcmp("VK_LAYER_LUNARG_standard_validation", prop.layerName) == 0) {
-        foundLayer = true;
+      if (strcmp("VK_LAYER_KHRONOS_validation", prop.layerName) == 0) {
+        foundKhronosValidationLayer = true;
         break;
       }
     }
 
-    if (!foundLayer) {
-      throw std::runtime_error(
-          "Layer VK_LAYER_LUNARG_standard_validation not supported\n");
+    for (VkLayerProperties prop : layerProperties) {
+      if (strcmp("VK_LAYER_LUNARG_standard_validation", prop.layerName) == 0) {
+        foundLunarGValidationLayer = true;
+        break;
+      }
     }
-    enabledLayers.push_back(
-        "VK_LAYER_LUNARG_standard_validation");  // Alright, we can use this
-                                                 // layer.
+
+    if (!foundKhronosValidationLayer && !foundLunarGValidationLayer) {
+      throw std::runtime_error(
+          "Neither VK_LAYER_KHRONOS_validation nor VK_LAYER_LUNARG_standard_validation found(ValidationLayers feature). Currently mlspv need Vulkan ValidationLayers.\n");
+    }
+
+    // Khronos validation layer supercedes LunarG validation layer.
+    if (foundKhronosValidationLayer) {
+      enabledLayers.push_back(
+          "VK_LAYER_KHRONOS_validation");  // Alright, we can use this
+                                                   // layer.
+    } else if (foundLunarGValidationLayer) {
+      enabledLayers.push_back(
+          "VK_LAYER_LUNARG_standard_validation");
+    }
 
     /*
     We need to enable an extension named VK_EXT_DEBUG_REPORT_EXTENSION_NAME,
@@ -90,11 +105,11 @@ int main(int argc, char **argv) {
       }
     }
 
-    if (!foundExtension) {
-      throw std::runtime_error(
-          "Extension VK_EXT_DEBUG_REPORT_EXTENSION_NAME not supported\n");
+    if (foundExtension) {
+      enabledExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+    } else {
+      std::cout << "WARN: VK_EXT_DEBUG_REPORT_EXTENSION_NAME not found in the Vulkan runtime. Some debugging features are not available.\n";
     }
-    enabledExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
   }
 
   for (const auto *layer : enabledLayers) {

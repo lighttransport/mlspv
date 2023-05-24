@@ -22,6 +22,7 @@ MLSpv Use existing eco-system as much as possible.
 * Use SPIR-V as an IR(intermediate language).
 * Use Vulkan as a runtime
   * Use SwiftShader as a CPU fallback
+  * TODO: Use Mesa software Vulkan
   * Optional: Use SPIRV-Cross to run SPIR-V code on CPU(through C/C++ codegen)
 
 ## Supported platforms
@@ -33,18 +34,20 @@ MLSpv Use existing eco-system as much as possible.
 * [ ] macOS
 * [ ] Android(Inference only)
 
-## Supported GPUs
+## Supported GPUs and Vulkan backend
 
 * [x] AMD GPUs(Vulkan 1.2 or later)
   * [x] RADV(Mesa) driver
   * [ ] amdgpu-pro driver
 * [x] NVIDIA GPUs(Vulkan 1.2 or later)
+* [ ] Intel GPUs(Vulkan 1.2 or later)
 * [ ] Android 10 or later
+* [x] SwiftShader
+* [ ] Mesa LLVMpipe(CPU Vulkan implementatin)
 
 ## Requirements
 
-* C++11 compiler
-  * C++14 when you want to build SwiftShader
+* C++14 compiler
 * CMake
 * Ninja(Linux and macOS)
 * Python3(to build some submodules)
@@ -62,16 +65,19 @@ $ git submodule update --init --recursive
 This step is only required when you checkout the repo or update submodules.
 If you have your own build of clspv, SPIRV-Cross, etc. You can skip this step.
 
+30 ~ 40 GB of storage is required to build clspv(including llvm) from source code.
+
 #### Build clspv
 
 ```
 # Checkout llvm and other dependencies required to build clspv
 $ ./scripts/setup-clspv.sh
 
+# Build clsvp
 $ ./scripts/build-clspv.sh
 ```
 
-#### Build ValidationLayers
+#### Build Vulkan ValidationLayers
 
 ```
 $ ./scripts/build-validation-layers.sh
@@ -84,6 +90,8 @@ $ ./scripts/build-swiftshader-linux.sh
 ```
 
 ### Build MLSpv
+
+Edit cmake config in `./scripts/bootstrap-linux.sh`. Then
 
 ```
 $ ./scripts/bootstrap-linux.sh
@@ -99,6 +107,10 @@ T.B.W.
 
 ## Run
 
+```
+$ ./mlspv
+```
+
 ### Run with SwiftShader
 
 Specify ICD setting json file through `VK_ICD_FILENAMES` envrionment.
@@ -112,11 +124,14 @@ If you failed to load `.so`, add path to `libvk_swiftshader.so` into `LD_LIBRRAY
 
 ## TODO
 
-* [ ] iOS support.
+* [ ] Make Vulkan ValidationLayer optional.
+* [ ] Python binding.
+* [ ] Prebuilt binary
+* [ ] iOS(Metal) support?
 
 ## License
 
-MIT license
+MIT license.
 
 ### Thrid paty licenses
 

@@ -4,3 +4,5 @@ curdir=`pwd`
 
 cd third_party/clspv
 python utils/fetch_sources.py
+
+cd ${curdir}
