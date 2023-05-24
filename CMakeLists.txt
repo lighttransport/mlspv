@@ -1,5 +1,5 @@
-cmake_minimum_required (VERSION 3.8)
-project (vulkan_minimal_compute)
+cmake_minimum_required (VERSION 3.16)
+project (vulkan_minimal_compute LANGUAGES C CXX)
 
 set(TARGET_NAME mlspv)
 
@@ -95,7 +95,9 @@ if (ANDROID)
   android_create_apk(${BUILD_LIBNAME} "${CMAKE_BINARY_DIR}/apk" "${APP_SHARED_LIBRARIES}" "")
 
 else (ANDROID)
-  add_executable(${TARGET_NAME} src/main.cc)
+  add_executable(${TARGET_NAME}
+     src/ggml.c
+     src/main.cc)
   
   IF (WIN32)
     # get rid of annoying MSVC warnings.

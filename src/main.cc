@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+// GGML
+#include "ggml.h"
+
 // vulkan loader
 #include <vulkan/vulkan.h>
 

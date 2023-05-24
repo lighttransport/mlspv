@@ -14,10 +14,11 @@ MLSpv is designed to have capability to run following tasks
   * Image segmentation, image matting
   * ASR(Automatic Speech Recogniton)
   * TTS(Text To Speech)
-  * Transformer based NLP(Natural Language Processing)
+  * LLM(Large Language Model), Transformer based NLP(Natural Language Processing)
 
 MLSpv Use existing eco-system as much as possible.
 
+* Use ggml as a model format.
 * Use HLSL(available from Vulkan 1.2+) or clspv(OpenCL to SPIR-V) as a HIR(higher level language).
 * Use SPIR-V as an IR(intermediate language).
 * Use Vulkan as a runtime
@@ -135,6 +136,8 @@ MIT license.
 
 ### Thrid paty licenses
 
+* ggml: MIT license. https://github.com/ggerganov/ggml
+* llama.cpp: MIT license. https://github.com/ggerganov/llama.cpp
 * vulkan_minimal_compute: MIT license. https://github.com/Erkaman/vulkan_minimal_compute
 * clspv : Apache 2.0 license. https://github.com/google/clspv
 * glslang : See glslang repo for details. https://github.com/KhronosGroup/glslang
