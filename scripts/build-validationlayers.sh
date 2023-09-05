@@ -39,6 +39,19 @@ ninja && ninja install
 
 cd ..
 
+## Vulkan-Utility-Libraries
+
+mkdir vulkan-utility-libraries
+
+cd vulkan-utility-libraries
+
+CXX=clang++ CC=clang cmake -G Ninja -DCMAKE_INSTALL_PREFIX=${DEST_DIR} ../../third_party/Vulkan-Utility-Libraries
+
+ninja && ninja install
+
+cd ..
+
+
 ## Vulkan-ValidationLayers
 
 mkdir vulkan-validationlayers
@@ -46,7 +59,7 @@ mkdir vulkan-validationlayers
 cd vulkan-validationlayers
 
 # Disable windowing system for a while.
-cmake -G Ninja \
+CXX=clang++ CC=clang cmake -G Ninja \
   -DCMAKE_INSTALL_PREFIX=${DEST_DIR} \
   -DVULKAN_HEADERS_INSTALL_DIR=${DEST_DIR} \
   -DGLSLANG_INSTALL_DIR=${DEST_DIR} \

@@ -28,3 +28,6 @@
 [submodule "third_party/amber"]
 	path = third_party/amber
 	url = https://github.com/google/amber
+[submodule "third_party/Vulkan-Utility-Librarries"]
+	path = third_party/Vulkan-Utility-Libraries
+	url = https://github.com/KhronosGroup/Vulkan-Utility-Libraries
